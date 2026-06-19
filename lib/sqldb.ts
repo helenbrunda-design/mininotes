@@ -14,10 +14,10 @@ export function getDb() {
     alasql("DELETE FROM notes");
     alasql("DELETE FROM comments");
 
-    // ⚠️ FAILLE : mots de passe stockés EN CLAIR
-    alasql("INSERT INTO users VALUES (1,'alice@mininotes.test','azerty123','user')");
-    alasql("INSERT INTO users VALUES (2,'bob@mininotes.test','motdepasse','user')");
-    alasql("INSERT INTO users VALUES (3,'admin@mininotes.test','admin','admin')");
+    // Inclusion du hash
+    alasql("INSERT INTO users VALUES (1,'alice@mininotes.test','$2b$10$GGRkihoNeb4t9VsjN9W/su70alSul/pmwCf0dkriC6Hy6UlSV3KFK'user')");
+    alasql("INSERT INTO users VALUES (2,'bob@mininotes.test','$2b$10$Caa5Vt.vbnAbe3t3q6S03eQ3H5Il1L3jcObl5f9UhyQjd2vUV1vQy','user')");
+    alasql("INSERT INTO users VALUES (3,'admin@mininotes.test','$2b$10$3ivQ6onS1pjdNNVR/tTPO.jWkT9FOWZDfmKAsgnB60X9zEWnzLdO2','admin')");
 
     // chaque note appartient à un userId (1=alice, 2=bob, 3=admin)
     alasql("INSERT INTO notes VALUES (1,1,'Liste de courses','lait, pain, cafe')");

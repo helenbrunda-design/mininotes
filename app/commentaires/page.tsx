@@ -17,8 +17,8 @@ export default function CommentairesPage() {
       {comments.map((c) => (
         <div key={c.id} style={{ marginBottom: 12 }}>
           <b>{c.author} :</b>{" "}
-          {/* ⚠️ FAILLE : HTML brut d'un utilisateur injecté tel quel */}
-          <span dangerouslySetInnerHTML={{ __html: c.html }} />
+          {/* ✅ affiché comme TEXTE : le <img onerror> n'est plus exécuté */}
+          <span>{c.html}</span>
         </div>
       ))}
     </main>

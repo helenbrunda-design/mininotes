@@ -12,11 +12,12 @@ export async function GET(req: NextRequest) {
   }
   const db = getDb();
 
-  // ⚠️ FAILLE : sessionId COLLÉ dans la requête → injection SQL possible via le cookie
-  const sql = `SELECT * FROM notes WHERE userId = ${sessionId}`;
-  console.log("🔎 SQL exécuté :", sql);
+  // Securité(requête paramétrée)
+  const rows = db(
+  "SELECT * FROM notes WHERE userId = ?", 
+  [Number(sessionId)]
+) as any[];
 
-  const rows = db(sql);
   return NextResponse.json({ notes: rows });
 }
 
@@ -35,10 +36,11 @@ export async function POST(req: NextRequest) {
   const nextId =
     (db("SELECT MAX(id) AS m FROM notes") as { m: number | null }[])[0].m! + 1;
 
-  // ⚠️ FAILLE : titre/contenu COLLÉS dans la requête → injection SQL
-  const sql = `INSERT INTO notes VALUES (${nextId}, ${sessionId}, '${titre}', '${contenu}')`;
-  console.log("🔎 SQL exécuté :", sql);
-  db(sql);
+  // Securité
+  db(
+  "INSERT INTO notes VALUES (?, ?, ?, ?)",
+  [Number(nextId), Number(sessionId), titre, contenu]
+);
 
   return NextResponse.json({ message: "Note créée", id: nextId });
 }
