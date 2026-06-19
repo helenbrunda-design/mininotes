@@ -1,0 +1,44 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+ # Droits minimaux .
+permissions:
+  contents: read   
+
+jobs:
+  audit-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Installation des dépendances
+        run: npm ci
+
+      - name: Vérification des vulnérabilités (npm audit)
+        run: npm audit --audit-level=high
+
+      - name: Analyse de la qualité du code (ESLint)
+        run: npx eslint .
+
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Scan de sécurité auto (Semgrep)
+        run: semgrep scan --config auto --error
