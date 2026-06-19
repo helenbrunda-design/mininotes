@@ -1,3 +1,4 @@
+/*global process */
 // app/api/login/route.ts — ✅ VERSION SÉCURISÉE FINALE
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
